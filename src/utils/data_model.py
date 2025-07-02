@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from pydantic import BaseModel
 
 class NewMessageModel(BaseModel):
@@ -9,7 +10,7 @@ class NewMessageModel(BaseModel):
 
 class MessageModel(BaseModel):
     message: str
-    metadata: str
+    metadata: Dict[str, Any]
     chat_history: str
     created_at: str
     updated_at: str
