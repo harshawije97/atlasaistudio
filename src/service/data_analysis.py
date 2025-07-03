@@ -1,18 +1,18 @@
-from langchain_openai import ChatOpenAI
+from starlette.responses import StreamingResponse
 from src.utils.data_model import MessageModel
 from src.events.event_embeddings import embeddings, get_index
 from langchain_core.prompts import ChatPromptTemplate
-from src.utils.templates.regular import regular_template
-from starlette.responses import StreamingResponse
+from src.utils.templates.analysis_template import analysis_template
+from langchain_anthropic import ChatAnthropic
 from os import getenv
 from dotenv import load_dotenv
-import logging
 import asyncio
+import logging
 
 load_dotenv()
 
 
-async def chat_chain_event_handler(values: MessageModel):
+async def data_analysis_chain_event_handler(values: MessageModel):
     try:
         embed_values = embeddings.embed_query(values.message)
         index = get_index(index=values.metadata.get("index"))  # type: ignore
@@ -29,7 +29,7 @@ async def chat_chain_event_handler(values: MessageModel):
                               for match in matches])
 
         async def text_stream():
-            template = ChatPromptTemplate.from_template(regular_template)
+            template = ChatPromptTemplate.from_template(analysis_template)
 
             prompt = template.format(
                 context=context,
@@ -37,12 +37,12 @@ async def chat_chain_event_handler(values: MessageModel):
                 question=values.message
             )
 
-            llm = ChatOpenAI(
-                api_key=getenv("OPENAI_API_KEY"),  # type: ignore
-                model="gpt-4o-mini-2024-07-18",
+            llm = ChatAnthropic(
+                api_key=getenv("ANTHROPIC_API_KEY"),
+                model_name="claude-3-7-sonnet-20250219",
                 temperature=0.7,
-                streaming=True
-            )
+                streaming=True,
+            )  # type: ignore
 
             for chunk in llm.stream(prompt):
                 logging.debug(f"Received chunk: {chunk}")
@@ -50,7 +50,6 @@ async def chat_chain_event_handler(values: MessageModel):
                 yield f"{chunk.content}"
 
         return StreamingResponse(text_stream(), media_type="text/event-stream", headers={"Cache-Control": "no-cache"})
-
     except Exception as e:
         logging.exception("Error in document event handler")
         return StreamingResponse(content=iter([str(e)]), media_type="text/event-stream")

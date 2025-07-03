@@ -1,4 +1,5 @@
 annotated-types
+anthropic
 anyio
 certifi
 click
@@ -35,6 +36,7 @@ uvicorn
 watchfiles
 websockets
 langchain-openai
+langchain-anthropic
 pinecone
 pinecone-plugin-interface
 langchain_core

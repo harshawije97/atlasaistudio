@@ -1,9 +1,9 @@
-from langchain_openai import ChatOpenAI
+from fastapi.responses import StreamingResponse
+from langchain_anthropic import ChatAnthropic
 from src.utils.data_model import MessageModel
 from src.events.event_embeddings import embeddings, get_index
 from langchain_core.prompts import ChatPromptTemplate
-from src.utils.templates.regular import regular_template
-from starlette.responses import StreamingResponse
+from src.utils.templates.question_builder import qna_template
 from os import getenv
 from dotenv import load_dotenv
 import logging
@@ -12,7 +12,7 @@ import asyncio
 load_dotenv()
 
 
-async def chat_chain_event_handler(values: MessageModel):
+async def chat_qna_generate_handler(values: MessageModel):
     try:
         embed_values = embeddings.embed_query(values.message)
         index = get_index(index=values.metadata.get("index"))  # type: ignore
@@ -29,7 +29,7 @@ async def chat_chain_event_handler(values: MessageModel):
                               for match in matches])
 
         async def text_stream():
-            template = ChatPromptTemplate.from_template(regular_template)
+            template = ChatPromptTemplate.from_template(qna_template)
 
             prompt = template.format(
                 context=context,
@@ -37,12 +37,12 @@ async def chat_chain_event_handler(values: MessageModel):
                 question=values.message
             )
 
-            llm = ChatOpenAI(
-                api_key=getenv("OPENAI_API_KEY"),  # type: ignore
-                model="gpt-4o-mini-2024-07-18",
+            llm = ChatAnthropic(
+                api_key=getenv("ANTHROPIC_API_KEY"),
+                model_name="claude-3-7-sonnet-20250219",
                 temperature=0.7,
-                streaming=True
-            )
+                streaming=True,
+            )  # type: ignore
 
             for chunk in llm.stream(prompt):
                 logging.debug(f"Received chunk: {chunk}")
