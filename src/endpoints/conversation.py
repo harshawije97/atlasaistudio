@@ -35,7 +35,7 @@ async def continue_qna_conversation(conversation_id: str, data: MessageModel):
 
 
 # Continue with data analysis conversation
-@router.post("/{conversation_id}/continue/qna")
+@router.post("/{conversation_id}/continue/analysis")
 async def continue_analysis_conversation(conversation_id: str, data: MessageModel):
     try:
         return await data_analysis_chain_event_handler(data)
