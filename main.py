@@ -22,6 +22,3 @@ app.add_middleware(
 @app.get("/")
 async def root():
     return {"message": "AI studio called ATLAS. Named after that famous giant of the Olympus ⚡ in Greek mythology."}
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
