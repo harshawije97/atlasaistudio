@@ -14,3 +14,8 @@ class MessageModel(BaseModel):
     chat_history: str
     created_at: str
     updated_at: str
+
+class SaveMessageModel(BaseModel):
+    conversation_id: str
+    user_id: str
+    message: MessageModel

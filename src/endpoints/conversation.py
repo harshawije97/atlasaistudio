@@ -25,7 +25,7 @@ async def continue_regular_conversation(conversation_id: str, data: MessageModel
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# Continue with Q & A builder
+# Continue with Q&A builder
 @router.post("/{conversation_id}/continue/qna")
 async def continue_qna_conversation(conversation_id: str, data: MessageModel):
     try:
