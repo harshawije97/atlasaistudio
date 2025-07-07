@@ -15,13 +15,14 @@ load_dotenv()
 async def chat_chain_event_handler(values: MessageModel):
     try:
         embed_values = embeddings.embed_query(values.message)
-        index = get_index(index=values.metadata.get("index"))  # type: ignore
+        index = get_index(index=values.metadata.model_dump().get(
+            "index"))  # type: ignore
 
         vectors = index.query(
             vector=embed_values,
             top_k=10,
             include_metadata=True,
-            namespace=values.metadata.get("namespace"),
+            namespace=values.metadata.model_dump().get("namespace"),
         )
 
         matches = vectors.get('matches', [])
