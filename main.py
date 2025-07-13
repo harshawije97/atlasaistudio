@@ -8,7 +8,7 @@ app.include_router(routers)
 
 origins = [
     "http://localhost:3000",
-    "https://travel-right-fe.vercel.app",
+    "https://atlas-ai-studio-app.vercel.app",
 ]
 
 app.add_middleware(
