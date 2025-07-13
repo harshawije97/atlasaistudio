@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from src.service.conversation_init import chat_event_handler
 from src.service.data_analysis import data_analysis_chain_event_handler
+from src.service.marketing_analysis import marketing_chain_event_handler
 from src.service.qna_generation import chat_qna_generate_handler
 from src.service.regular_conversation import chat_chain_event_handler
 from src.utils.data_model import MessageModel, NewMessageModel
@@ -39,5 +40,14 @@ async def continue_qna_conversation(conversation_id: str, data: MessageModel):
 async def continue_analysis_conversation(conversation_id: str, data: MessageModel):
     try:
         return await data_analysis_chain_event_handler(data)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+# Continue with data analysis conversation
+@router.post("/{conversation_id}/continue/marketing")
+async def continue_marketing_conversation(conversation_id: str, data: MessageModel):
+    try:
+        return await marketing_chain_event_handler(data)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

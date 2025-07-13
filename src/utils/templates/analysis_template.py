@@ -104,4 +104,11 @@ provide:
 		2-3 main insights the chart will highlight
 	- Limitations:
 		Any data constraints or visualization limitations to consider
+        
+Context: {context}
+
+Question: {question}
+Chat History: {chat_history}
+Answer (format in **Markdown**)
+
 """
