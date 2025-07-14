@@ -84,7 +84,7 @@ Explain your chart selection with:
 ## Data Visualization
 Present the visualization function call with properly structured data:
 
-view_data(type="[chart_type]", data=[
+(view_data(type="[chart_type]", data=[
     {
         "date": "YYYY-MM-DD",
         "metric1": value,
@@ -94,7 +94,7 @@ view_data(type="[chart_type]", data=[
         "metric1": value,
         "metric2": value
     } ...
-])
+]))
 
 ## Insight Summery
 provide:
