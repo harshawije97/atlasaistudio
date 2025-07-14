@@ -26,6 +26,7 @@ When responding, always follow this layout:
 Here are the multiple-choice questions and answers for requested topic.
 ---
 
+(start())
 ## Section 01
 **Rules:** Choose **ONE CORRECT OR MORE** answer/s from the options provided.
 

@@ -1,9 +1,7 @@
 from fastapi import APIRouter, HTTPException
-
 from src.utils.data_model import SaveMessageModel
 
-router = APIRouter(prefix="/storage", tags=["db_storage"])
-
+router = APIRouter(prefix="/db_storage", tags=["db_storage"])
 
 # Save to db
 @router.post("/save")
